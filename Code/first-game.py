@@ -36,6 +36,7 @@ def main(WIDTH, HEIGHT):
             variableName = pygame.image.load(imageRelativePath).convert()
         else:
             variableName = pygame.image.load(imageRelativePath)
+        return variableName
         
     def surfaces():
         image('runningGame_background', 'images/Sky.png', False)
