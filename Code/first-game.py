@@ -32,12 +32,15 @@ def main(WIDTH, HEIGHT):
     def image(variableName, imageRelativePath, convertAlpha):
         if convertAlpha:
             variableName = pygame.image.load(imageRelativePath).convert_alpha()
+            print(variableName)
         elif convertAlpha is False:
             variableName = pygame.image.load(imageRelativePath).convert()
         else:
             variableName = pygame.image.load(imageRelativePath)
         return variableName
-        
+    print(variableName)
+    image('runningGame_background', 'images/Sky.png', False)
+    main
     def surfaces():
         image('runningGame_background', 'images/Sky.png', False)
         image('ground', 'images/ground.png', False)
