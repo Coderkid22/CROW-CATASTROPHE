@@ -38,8 +38,8 @@ def main(WIDTH, HEIGHT):
             variableName = pygame.image.load(imageRelativePath)
         
     def surfaces():
-        image(runningGame_background, 'images/Sky.png', False)
-        image(ground, 'images/ground.png', False)
+        image('runningGame_background', 'images/Sky.png', False)
+        image('ground', 'images/ground.png', False)
         topOfGround = HEIGHT - ground.get_size()[1]
 
         scoreSuture = font1.render('SCORE', False, (64, 64, 64))

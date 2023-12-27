@@ -13,8 +13,5 @@ class functionCallEachTime(ast.NodeVisitor):
                 if isinstance(firstArgument, ast.Name):
                     node.args[0] = ast.Str(firstArgument.id)
         self.generic_visit(node)
-
-
-
-with open(filePath, 'w') as file:
-    file.writelines(lines)
+call = functionCallEachTime()
+call.visit(tree)
