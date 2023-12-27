@@ -36,7 +36,7 @@ def main(WIDTH, HEIGHT):
             variableName = pygame.image.load(imageRelativePath).convert()
         else:
             variableName = pygame.image.load(imageRelativePath)
-        convertAlpha =True
+        convertAlpha = True
     image(True)
         
 
