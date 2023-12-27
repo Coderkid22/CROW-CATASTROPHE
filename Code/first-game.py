@@ -31,9 +31,12 @@ def main(WIDTH, HEIGHT):
 
     def image(convertAlpha):
         if convertAlpha:
-            pass#variableName = pygame.image.load(imageRelativePath).convert_alpha()
+            variableName = pygame.image.load(imageRelativePath).convert_alpha()
+        elif convert_alpha is False:
+            variableName = pygame.image.load(imageRelativePath).convert()
+        else:
+            variableName = pygame.image.load(imageRelativePath)
         convertAlpha =True
-        print(True is convertAlpha)
     image(True)
         
 
