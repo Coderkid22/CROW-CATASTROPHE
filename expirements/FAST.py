@@ -1,12 +1,20 @@
-filePath = input('what is the file path and if its in a dir then put the dirs name to?: ')
-old_text = input('what are the char(s) you want to replace?: ')
-new_text = input('what do you want to replace it with?:  ')
-print(f'{filePath} \n {old_text} \n {new_text}')
+import ast
 
-with open(filePath, 'r') as file:
-    lines = file.readlines()
+with open(filePath, 'f') as file:
+    text = file.readlines()
 
-lines = [line.replace(old_text, new_text)for line in lines]
+tree = ast.parse(text)
+
+class functionCallEachTime(ast.NodeVisitor):
+    def callFunctionForEachFunctionCallinTree(self, node):
+        if 42 <= node.lineo <= 62:
+            if node.args:
+                firstArgument = node.args[0]
+                if isinstance(firstArgument, ast.Name):
+                    node.args[0] = ast.Str(firstArgument.id)
+        self.generic_visit(node)
+
+
 
 with open(filePath, 'w') as file:
     file.writelines(lines)
