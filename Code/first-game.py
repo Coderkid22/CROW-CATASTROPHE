@@ -39,7 +39,6 @@ def main(WIDTH, HEIGHT):
         else:
             image[variableName] = pygame.image.load(imageRelativePath)
         return image[variableName]
-    image('runningGame_background', 'images/Sky.png', False)
 
     def surfaces():
         image('runningGame_background', 'images/Sky.png', False)
