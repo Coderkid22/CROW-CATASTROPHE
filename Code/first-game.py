@@ -30,17 +30,17 @@ def main(WIDTH, HEIGHT):
         WINDOW.blit(sprite, spriteRectangle)
 
     def image(variableName, imageRelativePath, convertAlpha):
+        image = {}
         if convertAlpha:
-            variableName = pygame.image.load(imageRelativePath).convert_alpha()
+            image[variableName] = pygame.image.load(imageRelativePath).convert_alpha()
             print(variableName)
         elif convertAlpha is False:
-            variableName = pygame.image.load(imageRelativePath).convert()
+            image[variableName] = pygame.image.load(imageRelativePath).convert()
         else:
-            variableName = pygame.image.load(imageRelativePath)
-        return variableName
-    print(variableName)
+            image[variableName] = pygame.image.load(imageRelativePath)
+        return image[variableName]
     image('runningGame_background', 'images/Sky.png', False)
-    main
+
     def surfaces():
         image('runningGame_background', 'images/Sky.png', False)
         image('ground', 'images/ground.png', False)
