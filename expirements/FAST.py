@@ -1,12 +1,14 @@
 import ast
 import astunparse
 
+with open('Code/first-game.py', 'r') as file:
+    tree = ast.parse(file.read())
 
-
-tree = ast.parse(text)
+tree = ast.parse(code)
 argumentIndexNumber = 0
+
 class ChangeImageFunctionCall(ast.NodeTransformer):
-    def callFunctionForEachFunctionCallinTree(self, node):
+    def visit_Call(self, node):
         if 42 <= node.lineo <= 62:
             if isinstance(node.func, ast.Name) and node.func.id == 'image':
                 # just for readiblity argumentIndexNumber = 0
@@ -18,8 +20,7 @@ class ChangeImageFunctionCall(ast.NodeTransformer):
             return node
 
 
-with open('Code/first-game.py', 'r') as file:
-    tree = ast.parse(file.read())
+
 
 tree = ChangeImageFunctionCall().visit(tree)
 
