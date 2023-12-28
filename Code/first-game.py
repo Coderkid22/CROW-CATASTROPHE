@@ -29,40 +29,39 @@ def main(WIDTH, HEIGHT):
     def display_image(sprite, spriteRectangle):
         WINDOW.blit(sprite, spriteRectangle)
 
-    def image(variableName, imageRelativePath, convertAlpha):
+    def image( imageRelativePath, convertAlpha):
         image = {}
         if convertAlpha:
-            image[variableName] = pygame.image.load(imageRelativePath).convert_alpha()
+            pygame.image.load(imageRelativePath).convert_alpha()
             print(variableName)
         elif convertAlpha is False:
-            image[variableName] = pygame.image.load(imageRelativePath).convert()
+            pygame.image.load(imageRelativePath).convert()
         else:
-            image[variableName] = pygame.image.load(imageRelativePath)
-        return image[variableName]
+            pygame.image.load(imageRelativePath)
 
     def surfaces():
-        image('runningGame_background', 'images/Sky.png', False)
-        image('ground', 'images/ground.png', False)
+        runningGame_background = image('images/Sky.png', False)
+        ground = image('images/ground.png', False)
         topOfGround = HEIGHT - ground.get_size()[1]
 
         scoreSuture = font1.render('SCORE', False, (64, 64, 64))
         scoreFuture = font2.render('SCORE', False, 'Black')
         scoreRectangle = scoreSuture.get_rect(center = (400, 75))
 
-        image(retry_button, 'images/gameState_assets/retry_button.png', True)
+        retry_button = image('images/gameState_assets/retry_button.png', True)
         new_retry_button = 1
         retry_buttonRectangle = retry_button.get_rect(center = (400, 150))
 
-        image(start_button, 'images\gameState_assets\start_button.png', True)
+        start_button = image('images\gameState_assets\start_button.png', True)
         start_buttonRectangle = start_button.get_rect(center = (400,400))
 
-        image(lizard, 'images/lizard/lizard (1).png', True)
+        lizard = image('images/lizard/lizard (1).png', True)
         new_lizard = pygame.transform.smoothscale(lizard, (99, 100))
         lizardRectangle = new_lizard.get_rect(midbottom = (704, 681))
         lizardRectangle.width = 60
         lizardRectangle.height = 1
 
-        image(player, 'images/player/player_walk_1.png', True)
+        player = image('images/player/player_walk_1.png', True)
         new_player = pygame.transform.smoothscale(player, (90, 120))
         playerRectangle = player.get_rect(midbottom = (80, topOfGround))
         playerRectangle.width = 90
