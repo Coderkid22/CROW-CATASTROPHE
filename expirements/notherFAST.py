@@ -6,6 +6,10 @@ print(f'{filePath} {old_text} {new_text}')
  
 with open(filePath, 'r') as file:
     lines = file.readlines()
-lines = [line.replace(old_text, new_text) for line in lines]
+
+start_line = 32
+end_line = 104
+
+lines = [line.replace(old_text, new_text) if start_line <= i <= end_line else line for i, line in enumerate(lines, start=1)]
 with open(filePath, 'w') as file:
     file.writelines(lines)

@@ -1,5 +1,6 @@
 import sys
 import os
+import math
 
 stdout = sys.stdout  # save original stdout
 sys.stdout = open(os.devnull, 'w')  # redirect stdout to null
@@ -16,7 +17,7 @@ pygame.init()
 
 
 def main(WIDTH, HEIGHT):
-    WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
+    WINDOW = pygame.display.set_mode((WIDTH, HEIGHT),  pygame.RESIZABLE)
     clock = pygame.time.Clock()
     font1 = pygame.font.Font('font(s)/KarmaSuture.otf', 50)
     font2 = pygame.font.Font('font(s)/KarmaFuture.otf', 50)
@@ -29,39 +30,67 @@ def main(WIDTH, HEIGHT):
     def display_image(sprite, spriteRectangle):
         WINDOW.blit(sprite, spriteRectangle)
 
-    def image( imageRelativePath, convertAlpha):
-        image = {}
+    def imageLoad(imageRelativePath, convertAlpha):
         if convertAlpha:
-            pygame.image.load(imageRelativePath).convert_alpha()
+            return pygame.image.load(imageRelativePath).convert_alpha()
             print(variableName)
-        elif convertAlpha is False:
-            pygame.image.load(imageRelativePath).convert()
+        elif not convertAlpha:
+            return pygame.image.load(imageRelativePath).convert()
         else:
-            pygame.image.load(imageRelativePath)
+            return pygame.image.load(imageRelativePath)
 
     def surfaces():
-        runningGame_background = image('images/Sky.png', False)
-        ground = image('images/ground.png', False)
+        FPS = 60
+        runningGame_background = imageLoad('images/Sky.png', False)
+        ground = imageLoad('images/ground.png', False)
         topOfGround = HEIGHT - ground.get_size()[1]
 
         scoreSuture = font1.render('SCORE', False, (64, 64, 64))
         scoreFuture = font2.render('SCORE', False, 'Black')
         scoreRectangle = scoreSuture.get_rect(center = (400, 75))
 
-        retry_button = image('images/gameState_assets/retry_button.png', True)
+        retry_button = imageLoad('images/gameState_assets/retry_button.png', True)
         new_retry_button = 1
         retry_buttonRectangle = retry_button.get_rect(center = (400, 150))
 
-        start_button = image('images\gameState_assets\start_button.png', True)
-        start_buttonRectangle = start_button.get_rect(center = (400,400))
+        gameOver_text = pygame.image.load('images\gameState_assets\gameOver_text.png')
+        gameOver_textRectangle = gameOver_text.get_rect(center = (WIDTH//2, HEIGHT//5))
 
-        lizard = image('images/lizard/lizard (1).png', True)
+        image1 = pygame.image.load('images\gameState_assets\gameOver_text.png')
+        imageWidth, imageHeight = image1.get_size()
+        aspectRatioOfImage =  imageWidth / imageHeight
+
+        newHeightOfImage = 80
+        newWidthOfImage = int(newHeightOfImage * aspectRatioOfImage)
+
+        new_image = pygame.transform.smoothscale(image1, (newWidthOfImage, newHeightOfImage))
+        image_rect = image1.get_rect(center=(WIDTH//2, HEIGHT//3.5))
+
+        angle = 0
+        rotateDirection = 1
+        timer = 0
+        # Adjust the angle
+        angle = math.sin(timer) * 3.5  # Adjust this value to change the speed of rotation
+        timer += 0.043
+        # Rotate the image only if the angle has changed
+
+        rotated_image = pygame.transform.rotate(new_image, angle)
+        rotated_rect = rotated_image.get_rect(center=image_rect.center)
+
+        WINDOW.blit(rotated_image, rotated_rect)
+        # Flip the display
+        pygame.display.flip()
+
+        # Cap the frame rate
+        clock.tick(FPS)
+
+        lizard = imageLoad('images/lizard/lizard (1).png', True)
         new_lizard = pygame.transform.smoothscale(lizard, (99, 100))
         lizardRectangle = new_lizard.get_rect(midbottom = (704, 681))
         lizardRectangle.width = 60
         lizardRectangle.height = 1
 
-        player = image('images/player/player_walk_1.png', True)
+        player = imageLoad('images/player/player_walk_1.png', True)
         new_player = pygame.transform.smoothscale(player, (90, 120))
         playerRectangle = player.get_rect(midbottom = (80, topOfGround))
         playerRectangle.width = 90
@@ -123,7 +152,7 @@ def main(WIDTH, HEIGHT):
                 gameOver = True
         elif gameOver:
             display_image(variables['retry_button'], variables['retry_buttonRectangle'])
-            display_image(va)
+            
             # display_image(variables['start_button'], variables['start_buttonRectangle'])
             
         
@@ -137,7 +166,7 @@ def main(WIDTH, HEIGHT):
             # mousePositon = pygame.mouse.get_pos()
             # if variables['playerRectangle'] .collidepoint(mousepos):
             #     pass
-        pygame.display.update()
+        pygame.display.flip()
         clock.tick(60)
 
 main(WINDOW_WIDTH, WINDOW_HEIGHT)
