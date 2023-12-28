@@ -1,26 +1,24 @@
 import ast
 import astunparse
+import shutil
+
+shutil.copy('code/first-game.py', 'first-game.py.bak')
 
 with open('Code/first-game.py', 'r') as file:
-    tree = ast.parse(file.read())
+    code = file.read()
 
 tree = ast.parse(code)
-argumentIndexNumber = 0
 
 class ChangeImageFunctionCall(ast.NodeTransformer):
     def visit_Call(self, node):
-        if 42 <= node.lineo <= 62:
+        if 42 <= node.lineno <= 62:
             if isinstance(node.func, ast.Name) and node.func.id == 'image':
-                # just for readiblity argumentIndexNumber = 0
-                variableName = node.args[argumentIndexNumber].s
-                secondArgument = node.args[argumentIndexNumber + 1]
-                thirdArgument = node.args[argumentIndexNumber + 2]
+                variableName = node.args[0].s
+                secondArgument = node.args[1]
+                thirdArgument = node.args[2]
                 newFunctionCall = ast.parse(f'{variableName} = image({secondArgument}, {thirdArgument})')
                 return newFunctionCall
             return node
-
-
-
 
 tree = ChangeImageFunctionCall().visit(tree)
 
