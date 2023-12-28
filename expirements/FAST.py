@@ -2,7 +2,7 @@ import ast
 import astunparse
 import shutil
 
-shutil.copy('source path', 'copy path')
+shutil.copy('code/first-game.py', 'first-game.py.bak')
 
 with open('Code/first-game.py', 'r') as file:
     code = file.read()
