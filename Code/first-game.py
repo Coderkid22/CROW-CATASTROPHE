@@ -53,36 +53,15 @@ def main(WIDTH, HEIGHT):
         new_retry_button = 1
         retry_buttonRectangle = retry_button.get_rect(center = (400, 150))
 
-        gameOver_text = pygame.image.load('images\gameState_assets\gameOver_text.png')
-        gameOver_textRectangle = gameOver_text.get_rect(center = (WIDTH//2, HEIGHT//5))
+        gameOver_text = imageLoad('images\gameState_assets\gameOver_text.png', True)
+        gameOver_textRectangle = gameOver_text.get_rect(center = (WIDTH//2, HEIGHT//3.5))
 
-        image1 = pygame.image.load('images\gameState_assets\gameOver_text.png')
-        imageWidth, imageHeight = image1.get_size()
-        aspectRatioOfImage =  imageWidth / imageHeight
+        gameOver_textWidth, gameOver_textHeight = gameOver_text.get_size()
+        aspectRatioOfGameOver_text = gameOver_textWidth / gameOver_textHeight
 
-        newHeightOfImage = 80
-        newWidthOfImage = int(newHeightOfImage * aspectRatioOfImage)
-
-        new_image = pygame.transform.smoothscale(image1, (newWidthOfImage, newHeightOfImage))
-        image_rect = image1.get_rect(center=(WIDTH//2, HEIGHT//3.5))
-
-        angle = 0
-        rotateDirection = 1
-        timer = 0
-        # Adjust the angle
-        angle = math.sin(timer) * 3.5  # Adjust this value to change the speed of rotation
-        timer += 0.043
-        # Rotate the image only if the angle has changed
-
-        rotated_image = pygame.transform.rotate(new_image, angle)
-        rotated_rect = rotated_image.get_rect(center=image_rect.center)
-
-        WINDOW.blit(rotated_image, rotated_rect)
-        # Flip the display
-        pygame.display.flip()
-
-        # Cap the frame rate
-        clock.tick(FPS)
+        newHeightOfGameOver_text = 80
+        newWidthOfGameOver_text = int(newHeightOfGameOver_text * aspectRatioOfGameOver_text)
+        new_gameOver_text = pygame.transform.smoothscale(gameOver_text, (newWidthOfGameOver_text, newHeightOfGameOver_text))
 
         lizard = imageLoad('images/lizard/lizard (1).png', True)
         new_lizard = pygame.transform.smoothscale(lizard, (99, 100))
@@ -127,6 +106,12 @@ def main(WIDTH, HEIGHT):
                     variables['lizardRectangle'].left = 850
                     variables['playerRectangle'].midbottom = (variables['playerRectangle'].midbottom[0], variables['topOfGround'])
 
+                    angle = 0
+                    rotateDirection = 1
+                    timer = 0
+                    angle = math.sin(timer) * 3.5 
+                    timer += 0.043
+
         if run_game:
             display_image(variables['runningGame_background'], (0, 0))
             display_image(variables['ground'], (0, variables['topOfGround'] ))
@@ -152,7 +137,13 @@ def main(WIDTH, HEIGHT):
                 gameOver = True
         elif gameOver:
             display_image(variables['retry_button'], variables['retry_buttonRectangle'])
-            
+
+            rotated_gameOver_text = pygame.transform.rotate(variables['new_gameOver_text'], angle)
+            rotated_rectangleOfgameOver_text = rotated_gameOver_text.get_rect(center = gameOver_textRectangle.center)
+
+            display_image(rotated_gameOver_text, rotated_rectangleOfgameOver_text)
+
+                
             # display_image(variables['start_button'], variables['start_buttonRectangle'])
             
         
