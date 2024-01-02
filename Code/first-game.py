@@ -15,7 +15,9 @@ def main(WIDTH, HEIGHT):
     FPS = 60
     clock = pygame.time.Clock()
     fontFuture = pygame.font.Font('font(s)/KarmaSuture.otf', 50)
-    fontSuture = pygame.font.Font('font(s)/KarmaFuture.otf', 100)
+    fontSuture_ForGameOver_Text = pygame.font.Font('font(s)/KarmaFuture.otf', 150)
+    fontSuture_ForTimeAlive = pygame.font.Font('font(s)/KarmaFuture.otf', 50)
+
     player_gravity = 0
     run_whileLoop = True
     run_game = True   
@@ -37,21 +39,21 @@ def main(WIDTH, HEIGHT):
 
     def Display_timeAlive():
         currentTime = pygame.time.get_ticks() // 1000 - timeAlive
-        scoreFuture = fontFuture.render(f'Time Alive : {currentTime}', False, (64, 64, 64))
-        scoreRectangle = scoreFuture.get_rect(center = (400, 75))
-        display_image(scoreFuture, scoreRectangle)
+        TimeAlive_Text = fontSuture_ForTimeAlive.render(f'Time Alive : {currentTime}s', False, (64, 64, 64))
+        TimeAlive_TextRectangle = TimeAlive_Text.get_rect(center = (400, 75))
+        display_image(TimeAlive_Text, TimeAlive_TextRectangle)
 
     def surfaces():
         runningGame_background = imageLoad('images/Sky.png', False)
         ground = imageLoad('images/ground.png', False)
         topOfGround = HEIGHT - ground.get_size()[1]
 
-        scoreSuture = fontFuture.render('SCORE', False, (64, 64, 64))
-        scoreFuture = fontSuture.render('SCORE', False, (64, 64, 64))
-        scoreRectangle = scoreSuture.get_rect(center = (400, 75))
+        # scoreSuture = fontFuture.render('SCORE', False, (64, 64, 64))
+        # scoreFuture = fontSuture.render('SCORE', False, (64, 64, 64))
+        # scoreRectangle = scoreSuture.get_rect(center = (400, 75))
         
-        gameOver_text = fontSuture.render('GAME OVER!', False, (255, 89, 41))
-        gameOver_textRectangle = gameOver_text.get_rect(center = (WIDTH//2, HEIGHT//3.5))
+        gameOver_text = fontSuture_ForGameOver_Text.render('GAME OVER!', False, (255, 89, 41))
+        gameOver_textRectangle = gameOver_text.get_rect(center = (WIDTH//2, HEIGHT//4))
         gameOver_textWidth, gameOver_textHeight = gameOver_text.get_size()
         aspectRatioOfGameOver_text = gameOver_textWidth / gameOver_textHeight
 
@@ -69,13 +71,13 @@ def main(WIDTH, HEIGHT):
         lizardRectangle.width = 60
         lizardRectangle.height = 1
 
-
         player = imageLoad('images/player/player_walk_1.png', True)
         new_player = pygame.transform.smoothscale(player, (90, 120))
         playerRectangle = player.get_rect(midbottom = (80, topOfGround))
         playerRectangle.width = 90
         playerRectangle.height = 120
-        playerStand = imageLoad('')
+        playerStand = imageLoad('images\player\player_stand.png', True)
+
 
         variables = {name: value for name, value in locals().items() if not name.startswith('__')}
 
@@ -103,7 +105,7 @@ def main(WIDTH, HEIGHT):
                     run_game, gameOver = True, False
                     variables['lizardRectangle'].left = 850
                     variables['playerRectangle'].midbottom = (variables['playerRectangle'].midbottom[0], variables['topOfGround'])
-                    timeAlive = pygame.time.get_ticks()
+                    timeAlive = pygame.time.get_ticks() // 1000
         if run_game:
             display_image(variables['runningGame_background'], (0, 0))
             display_image(variables['ground'], (0, variables['topOfGround'] ))
@@ -132,11 +134,13 @@ def main(WIDTH, HEIGHT):
             angle = math.sin(timer) * 3.5 
             timer += 0.043
 
+            WINDOW.fill(('black'))
             rotated_gameOver_text = pygame.transform.rotate(variables['gameOver_text'], angle)
             rotated_rectangleOfgameOver_text = rotated_gameOver_text.get_rect(center = variables['gameOver_textRectangle'].center)
-            WINDOW.fill(('black'))
+
             display_image(rotated_gameOver_text, rotated_rectangleOfgameOver_text)
             display_image(variables['retry_button'], variables['retry_buttonRectangle'])
+            display_image(variables['playerStand'], variables['playerStand_Rectangle'])
 
         pygame.display.update()
         clock.tick(FPS)
