@@ -1,60 +1,48 @@
-import pygame
-import sys
-import math
-
+a
+import pygame.freetype
 
 # Initialize Pygame
 pygame.init()
 
 # Set up some constants
-WIDTH, HEIGHT = 800, 800
-FPS = 60
+WIDTH, HEIGHT = 640, 480
+WHITE = (255, 255, 255)
+sum = '38329y32846' + 'ea28332sfs'
+print(sum)
 
-# Create the game window
-screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
+# Create the screen
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
-# Load the image
-image = pygame.image.load('images\gameState_assets\gameOver_text.png')
-imageWidth, imageHeight = image.get_size()
-aspectRatioOfImage =  imageWidth / imageHeight
+# Load a font
+font = pygame.freetype.SysFont("arial", 24)
 
-newHeightOfImage = 80
-newWidthOfImage = int(newHeightOfImage * aspectRatioOfImage)
-print(newWidthOfImage, newHeightOfImage )
+# Render the text to a surface
+surface, rect = font.render("Hello World!", WHITE)
 
-new_image = pygame.transform.smoothscale(image, (newWidthOfImage, newHeightOfImage))
-image_rect = image.get_rect(center=(WIDTH//2, HEIGHT//3.5))
+# Rotate the surface
 
-# Set the initial angle and rotation direction
-angle = 0
-rotateSpeed = 1
-
-# Create a clock object to control the frame rate
-clock = pygame.time.Clock()
-
+import math
 timer = 0
-Run = True
-while Run:
+angle = 1
+
+# Main loop
+running = True
+while running:
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            Run = False
+       if event.type == pygame.QUIT:
+           running = False
 
+   # Clear the screen
+    screen.fill((0, 0, 0))
 
-    # Clear the screen
-    WINDOW.fill((0, 84, 0))
+  
+    angle = math.sin(timer) * 5
+    timer += 0.001
+    rotated_surface = pygame.transform.rotate(surface, angle)
+   # Blit the rotated surface onto the screen
+    screen.blit(rotated_surface, (WIDTH // 2, HEIGHT // 2))
 
-    # Adjust the angle
-    angle = math.sin(timer) * 3.5  # Adjust this value to change the speed of rotation
-    timer += 0.043
-    # Rotate the image only if the angle has changed
-
-    rotated_image = pygame.transform.rotate(new_image, angle)
-    rotated_rect = rotated_image.get_rect(center=image_rect.center)
-
-    WINDOW.blit(rotated_image, rotated_rect)
-    # Flip the display
+   # Update the display
     pygame.display.flip()
 
-    # Cap the frame rate
-    clock.tick(FPS)
-print(image.get_size())
+pygame.quit()
