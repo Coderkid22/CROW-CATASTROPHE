@@ -2,30 +2,26 @@ import sys
 import os
 import math
 
-stdout = sys.stdout  # save original stdout
-sys.stdout = open(os.devnull, 'w')  # redirect stdout to null
-import pygame  # pygame will not be able to print to stdout now
-sys.stdout = stdout  # reset stdout back to original
-
-
-
-
-# rest of your code
+stdout = sys.stdout
+sys.stdout = open(os.devnull, 'w')
+import pygame
+sys.stdout = stdout
 WINDOW_WIDTH, WINDOW_HEIGHT = 800, 800
 pygame.init()
 
-
-
 def main(WIDTH, HEIGHT):
     WINDOW = pygame.display.set_mode((WIDTH, HEIGHT),  pygame.RESIZABLE)
+    JUMPHEIGHT = -21
+    FPS = 60
     clock = pygame.time.Clock()
-    font1 = pygame.font.Font('font(s)/KarmaSuture.otf', 50)
-    font2 = pygame.font.Font('font(s)/KarmaFuture.otf', 50)
+    fontFuture = pygame.font.Font('font(s)/KarmaSuture.otf', 50)
+    fontSuture = pygame.font.Font('font(s)/KarmaFuture.otf', 100)
     player_gravity = 0
     run_whileLoop = True
     run_game = True   
-    jumpHeight = -21
     gameOver = False
+    angle = 0
+    timer = 0
 
     def display_image(sprite, spriteRectangle):
         WINDOW.blit(sprite, spriteRectangle)
@@ -33,41 +29,44 @@ def main(WIDTH, HEIGHT):
     def imageLoad(imageRelativePath, convertAlpha):
         if convertAlpha:
             return pygame.image.load(imageRelativePath).convert_alpha()
-            print(variableName)
         elif not convertAlpha:
             return pygame.image.load(imageRelativePath).convert()
         else:
             return pygame.image.load(imageRelativePath)
 
+    def Display_timeAlive():
+        currentTime = pygame.time.get_ticks()
+        scoreFuture = fontSuture.render(currentTime, False, (64, 64, 64))
+        scoreRectangle = scoreSuture.get_rect(center = (400, 75))
+        
     def surfaces():
-        FPS = 60
         runningGame_background = imageLoad('images/Sky.png', False)
         ground = imageLoad('images/ground.png', False)
         topOfGround = HEIGHT - ground.get_size()[1]
 
-        scoreSuture = font1.render('SCORE', False, (64, 64, 64))
-        scoreFuture = font2.render('SCORE', False, 'Black')
-        scoreRectangle = scoreSuture.get_rect(center = (400, 75))
-
-        retry_button = imageLoad('images/gameState_assets/retry_button.png', True)
-        new_retry_button = 1
-        retry_buttonRectangle = retry_button.get_rect(center = (400, 150))
-
-        gameOver_text = imageLoad('images\gameState_assets\gameOver_text.png', True)
+        # scoreSuture = fontFuture.render('SCORE', False, (64, 64, 64))
+        # scoreFuture = fontSuture.render('SCORE', False, (64, 64, 64))
+        # scoreRectangle = scoreSuture.get_rect(center = (400, 75))
+        
+        gameOver_text = fontSuture.render('GAME OVER!', False, (255, 89, 41))
         gameOver_textRectangle = gameOver_text.get_rect(center = (WIDTH//2, HEIGHT//3.5))
-
         gameOver_textWidth, gameOver_textHeight = gameOver_text.get_size()
         aspectRatioOfGameOver_text = gameOver_textWidth / gameOver_textHeight
 
-        newHeightOfGameOver_text = 80
-        newWidthOfGameOver_text = int(newHeightOfGameOver_text * aspectRatioOfGameOver_text)
-        new_gameOver_text = pygame.transform.smoothscale(gameOver_text, (newWidthOfGameOver_text, newHeightOfGameOver_text))
+        retry_button = imageLoad('images/gameState_assets/retry_button.png', True)
+        new_retry_button = 'soon to be used'
+        retry_buttonRectangle = retry_button.get_rect(center = (400, 600))
+
+        newHeightOfGameOver_text = 120
+        newWidthOfGameOver_text = 700
 
         lizard = imageLoad('images/lizard/lizard (1).png', True)
         new_lizard = pygame.transform.smoothscale(lizard, (99, 100))
         lizardRectangle = new_lizard.get_rect(midbottom = (704, 681))
+        jumpOver_lizardDetection_rectangle = new_lizard.get_rect()
         lizardRectangle.width = 60
         lizardRectangle.height = 1
+
 
         player = imageLoad('images/player/player_walk_1.png', True)
         new_player = pygame.transform.smoothscale(player, (90, 120))
@@ -81,9 +80,6 @@ def main(WIDTH, HEIGHT):
     
     variables = surfaces()
 
-
-   
-
     while run_whileLoop:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -92,31 +88,24 @@ def main(WIDTH, HEIGHT):
             if run_game: 
                 if event.type == pygame.MOUSEBUTTONDOWN and variables['playerRectangle'].bottom == variables['topOfGround']:
                     if variables['playerRectangle'].collidepoint(event.pos) or pygame.MOUSEBUTTONDOWN:
-                        player_gravity = jumpHeight
+                        player_gravity = JUMPHEIGHT
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE or pygame.K_UP or pygame.K_w:
                         if variables['playerRectangle'].bottom == variables['topOfGround']:
-                            player_gravity = jumpHeight
+                            player_gravity = JUMPHEIGHT
             elif gameOver:
                 mouse_position = pygame.mouse.get_pos()
                 if variables['retry_buttonRectangle'].collidepoint(mouse_position) and event.type == pygame.MOUSEBUTTONDOWN:
-                    pygame.time.wait(1000)
-                    run_game = True
+                    run_game, gameOver = True, False
                     variables['lizardRectangle'].left = 850
                     variables['playerRectangle'].midbottom = (variables['playerRectangle'].midbottom[0], variables['topOfGround'])
-
-                    angle = 0
-                    rotateDirection = 1
-                    timer = 0
-                    angle = math.sin(timer) * 3.5 
-                    timer += 0.043
 
         if run_game:
             display_image(variables['runningGame_background'], (0, 0))
             display_image(variables['ground'], (0, variables['topOfGround'] ))
 
-            pygame.draw.rect(WINDOW, '#F0B27A', variables['scoreRectangle'], 30, 15)
+            pygame.draw.rect(WINDOW, '#F0B27A', variables['scoreRectangle'], 0, 30)
             display_image(variables['scoreSuture'], variables['scoreRectangle'])
 
             variables['lizardRectangle'].x += -5
@@ -133,21 +122,23 @@ def main(WIDTH, HEIGHT):
             display_image(variables['new_player'], variables['playerRectangle'])
 
             if variables['lizardRectangle'].colliderect(variables['playerRectangle']):                        
-                run_game = False
-                gameOver = True
-        elif gameOver:
+                run_game, gameOver = False, True
+
+        if gameOver:
+            angle = math.sin(timer) * 3.5 
+            timer += 0.043
+
+            rotated_gameOver_text = pygame.transform.rotate(variables['gameOver_text'], angle)
+            rotated_rectangleOfgameOver_text = rotated_gameOver_text.get_rect(center = variables['gameOver_textRectangle'].center)
+            WINDOW.fill(('black'))
+            display_image(rotated_gameOver_text, rotated_rectangleOfgameOver_text)
             display_image(variables['retry_button'], variables['retry_buttonRectangle'])
 
-            rotated_gameOver_text = pygame.transform.rotate(variables['new_gameOver_text'], angle)
-            rotated_rectangleOfgameOver_text = rotated_gameOver_text.get_rect(center = gameOver_textRectangle.center)
+        pygame.display.update()
+        clock.tick(FPS)
 
-            display_image(rotated_gameOver_text, rotated_rectangleOfgameOver_text)
-
-                
-            # display_image(variables['start_button'], variables['start_buttonRectangle'])
-            
-        
-
+main(WINDOW_WIDTH, WINDOW_HEIGHT)
+# display_image(variables['start_button'], variables['start_buttonRectangle'])
             # keys = pygame.key.get_pressed()
             # if keys[pygame.K_SPACE]:
             #     print('LES JUMP')
@@ -157,7 +148,3 @@ def main(WIDTH, HEIGHT):
             # mousePositon = pygame.mouse.get_pos()
             # if variables['playerRectangle'] .collidepoint(mousepos):
             #     pass
-        pygame.display.flip()
-        clock.tick(60)
-
-main(WINDOW_WIDTH, WINDOW_HEIGHT)
