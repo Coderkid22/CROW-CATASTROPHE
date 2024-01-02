@@ -22,6 +22,7 @@ def main(WIDTH, HEIGHT):
     gameOver = False
     angle = 0
     timer = 0
+    timeAlive = 0
 
     def display_image(sprite, spriteRectangle):
         WINDOW.blit(sprite, spriteRectangle)
@@ -35,18 +36,19 @@ def main(WIDTH, HEIGHT):
             return pygame.image.load(imageRelativePath)
 
     def Display_timeAlive():
-        currentTime = pygame.time.get_ticks()
-        scoreFuture = fontSuture.render(currentTime, False, (64, 64, 64))
-        scoreRectangle = scoreSuture.get_rect(center = (400, 75))
-        
+        currentTime = pygame.time.get_ticks() // 1000 - timeAlive
+        scoreFuture = fontFuture.render(f'Time Alive : {currentTime}', False, (64, 64, 64))
+        scoreRectangle = scoreFuture.get_rect(center = (400, 75))
+        display_image(scoreFuture, scoreRectangle)
+
     def surfaces():
         runningGame_background = imageLoad('images/Sky.png', False)
         ground = imageLoad('images/ground.png', False)
         topOfGround = HEIGHT - ground.get_size()[1]
 
-        # scoreSuture = fontFuture.render('SCORE', False, (64, 64, 64))
-        # scoreFuture = fontSuture.render('SCORE', False, (64, 64, 64))
-        # scoreRectangle = scoreSuture.get_rect(center = (400, 75))
+        scoreSuture = fontFuture.render('SCORE', False, (64, 64, 64))
+        scoreFuture = fontSuture.render('SCORE', False, (64, 64, 64))
+        scoreRectangle = scoreSuture.get_rect(center = (400, 75))
         
         gameOver_text = fontSuture.render('GAME OVER!', False, (255, 89, 41))
         gameOver_textRectangle = gameOver_text.get_rect(center = (WIDTH//2, HEIGHT//3.5))
@@ -73,6 +75,7 @@ def main(WIDTH, HEIGHT):
         playerRectangle = player.get_rect(midbottom = (80, topOfGround))
         playerRectangle.width = 90
         playerRectangle.height = 120
+        playerStand = imageLoad('')
 
         variables = {name: value for name, value in locals().items() if not name.startswith('__')}
 
@@ -100,13 +103,14 @@ def main(WIDTH, HEIGHT):
                     run_game, gameOver = True, False
                     variables['lizardRectangle'].left = 850
                     variables['playerRectangle'].midbottom = (variables['playerRectangle'].midbottom[0], variables['topOfGround'])
-
+                    timeAlive = pygame.time.get_ticks()
         if run_game:
             display_image(variables['runningGame_background'], (0, 0))
             display_image(variables['ground'], (0, variables['topOfGround'] ))
 
-            pygame.draw.rect(WINDOW, '#F0B27A', variables['scoreRectangle'], 0, 30)
-            display_image(variables['scoreSuture'], variables['scoreRectangle'])
+            # pygame.draw.rect(WINDOW, '#F0B27A', variables['scoreRectangle'], 0, 30)
+            # display_image(variables['scoreSuture'], variables['scoreRectangle'])
+            Display_timeAlive()
 
             variables['lizardRectangle'].x += -5
 
@@ -124,7 +128,7 @@ def main(WIDTH, HEIGHT):
             if variables['lizardRectangle'].colliderect(variables['playerRectangle']):                        
                 run_game, gameOver = False, True
 
-        if gameOver:
+        elif gameOver:
             angle = math.sin(timer) * 3.5 
             timer += 0.043
 
